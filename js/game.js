@@ -1,6 +1,5 @@
 /**
-
- * With IP-based geolocation and fixed Justin music pause
+ * With IP-based geolocation, fixed Justin music pause, and MOBILE TOUCH CONTROLS
  */
 
 // Game Configuration
@@ -46,7 +45,10 @@ const gameState = {
     difficultyIncreased: false,
     audioContext: null,
     gainNode: null,
-    locationFetched: false
+    locationFetched: false,
+    // Mobile touch state
+    touchActive: false,
+    touchX: 0
 };
 
 // Asset Storage
@@ -81,35 +83,33 @@ function fetchUserLocationFromIP() {
     const locationStatus = document.getElementById('location-status');
     locationStatus.textContent = 'Fetching location...';
     
-    // Use ip-api.com free service (no API key needed)
-    fetch('http://ip-api.com/json/')
+    // Use ipapi.co (HTTPS - works better on mobile)
+    fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'success') {
-                gameState.latitude = data.lat;
-                gameState.longitude = data.lon;
-                gameState.location = `${data.city}, ${data.country}`;
-                locationStatus.textContent = `Location: ${gameState.location}`;
-                gameState.locationFetched = true;
-                checkCanStartGame();
-                console.log('Location fetched from IP:', gameState.location);
-            } else {
-                throw new Error('Location fetch failed');
-            }
+            gameState.latitude = data.latitude;
+            gameState.longitude = data.longitude;
+            gameState.location = `${data.city}, ${data.country_name}`;
+            locationStatus.textContent = `Location: ${gameState.location}`;
+            gameState.locationFetched = true;
+            checkCanStartGame();
+            console.log('Location fetched from IP:', gameState.location);
         })
         .catch(error => {
             console.error('IP location error:', error);
-            // Fallback to ipapi.co
-            fetch('https://ipapi.co/json/')
+            // Fallback to ip-api.com (HTTP fallback)
+            fetch('https://ip-api.com/json/')
                 .then(response => response.json())
                 .then(data => {
-                    gameState.latitude = data.latitude;
-                    gameState.longitude = data.longitude;
-                    gameState.location = `${data.city}, ${data.country_name}`;
-                    locationStatus.textContent = `Location: ${gameState.location}`;
-                    gameState.locationFetched = true;
-                    checkCanStartGame();
-                    console.log('Location fetched from backup IP service:', gameState.location);
+                    if (data.status === 'success') {
+                        gameState.latitude = data.lat;
+                        gameState.longitude = data.lon;
+                        gameState.location = `${data.city}, ${data.country}`;
+                        locationStatus.textContent = `Location: ${gameState.location}`;
+                        gameState.locationFetched = true;
+                        checkCanStartGame();
+                        console.log('Location fetched from backup:', gameState.location);
+                    }
                 })
                 .catch(() => {
                     gameState.location = 'Unknown';
@@ -294,11 +294,12 @@ function checkAssetsLoaded() {
 }
 
 /**
- * Setup event listeners
+ * Setup event listeners - WITH MOBILE TOUCH SUPPORT
  */
 function setupEventListeners() {
     document.getElementById('username-input-start').addEventListener('input', checkCanStartGame);
     
+    // Keyboard controls
     document.addEventListener('keydown', (e) => {
         gameState.keys[e.key.toLowerCase()] = true;
         if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(e.key.toLowerCase())) {
@@ -310,10 +311,49 @@ function setupEventListeners() {
         gameState.keys[e.key.toLowerCase()] = false;
     });
     
+    // MOBILE TOUCH CONTROLS [web:21][web:23]
+    config.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    config.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    config.canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+    config.canvas.addEventListener('touchcancel', handleTouchEnd, { passive: false });
+    
     document.getElementById('start-btn').addEventListener('click', startGame);
     document.getElementById('restart-btn').addEventListener('click', restartGame);
     document.getElementById('unmute-btn').addEventListener('click', enableSound);
     document.getElementById('continue-btn').addEventListener('click', continueGame);
+}
+
+/**
+ * Handle touch start - mobile controls [web:21]
+ */
+function handleTouchStart(e) {
+    if (!gameState.isRunning || gameState.isPaused) return;
+    
+    e.preventDefault();
+    gameState.touchActive = true;
+    
+    const touch = e.touches[0];
+    gameState.touchX = touch.clientX;
+}
+
+/**
+ * Handle touch move - mobile controls [web:21]
+ */
+function handleTouchMove(e) {
+    if (!gameState.isRunning || gameState.isPaused || !gameState.touchActive) return;
+    
+    e.preventDefault();
+    
+    const touch = e.touches[0];
+    gameState.touchX = touch.clientX;
+}
+
+/**
+ * Handle touch end - mobile controls [web:21]
+ */
+function handleTouchEnd(e) {
+    e.preventDefault();
+    gameState.touchActive = false;
 }
 
 function enableSound() {
@@ -351,6 +391,7 @@ function startGame() {
     gameState.justinSpawned = false;
     gameState.justinSpawnCooldown = 0;
     gameState.difficultyIncreased = false;
+    gameState.touchActive = false;
     updateScore();
     updateJustinCount();
     updateHighScore();
@@ -394,11 +435,12 @@ function gameLoop() {
 }
 
 /**
- * Update thief position
+ * Update thief position - WITH MOBILE TOUCH SUPPORT [web:21]
  */
 function updateThief() {
     const thief = gameState.thief;
     
+    // Keyboard controls
     if (gameState.keys['arrowleft'] || gameState.keys['a']) {
         thief.x -= thief.speed;
     }
@@ -406,6 +448,18 @@ function updateThief() {
         thief.x += thief.speed;
     }
     
+    // MOBILE TOUCH CONTROLS [web:21]
+    if (gameState.touchActive) {
+        // Move thief to touch position (smooth follow)
+        const targetX = gameState.touchX - thief.width / 2;
+        const diff = targetX - thief.x;
+        
+        if (Math.abs(diff) > 5) {
+            thief.x += diff * 0.2; // Smooth movement (20% per frame)
+        }
+    }
+    
+    // Keep thief on screen
     if (thief.x < 0) thief.x = 0;
     if (thief.x + thief.width > config.width) {
         thief.x = config.width - thief.width;
