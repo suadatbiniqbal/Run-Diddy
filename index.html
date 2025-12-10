@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diddy Nuggets</title>
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <!-- Fireflies Background -->
+    <div class="fireflies-container">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+    </div>
+
+    <div id="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <div class="start-content">
+                <!-- Ad Container Top -->
+                <div class="ad-container ad-top">
+                    <script
+                      async="async"
+                      data-cfasync="false"
+                      src="//pl26861791.effectivegatecpm.com/7841654758af5045d928133ce9d0d800/invoke.js"
+                    ></script>
+                    <div id="container-7841654758af5045d928133ce9d0d800"></div>
+                </div>
+
+                <h1 class="title brainrot-text">Diddy Nuggets</h1>
+                <p class="subtitle glitch-mini">Aint No Party Like Diddy Party </p>
+                
+                <div class="info-box">
+                    <p>Catch items, dodge cops</p>
+                    <p class="highlight">Justin = 1000 pts (easier after 30)</p>
+                </div>
+                
+                <p class="controls">Arrow Keys or A/D</p>
+                
+                <!-- Username Input -->
+                <div class="username-section">
+                    <div class="input-group">
+                        <input type="text" id="username-input-start" placeholder="Enter Username" maxlength="20" required>
+                        <div class="input-status" id="username-status"></div>
+                    </div>
+                    <p class="location-status" id="location-status">Fetching location...</p>
+                </div>
+                
+                <div class="button-group">
+                    <button id="start-btn" class="funky-btn" disabled>START GAME</button>
+                    <button id="unmute-btn" class="funky-btn secondary">SOUND ON</button>
+                    <a href="leaderboard.html" class="funky-btn leaderboard-link">LEADERBOARD</a>
+                </div>
+
+                <!-- Ad Container Bottom -->
+                <div class="ad-container ad-bottom">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '094487b0e8eb6155b637ff13dbbb9990',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                        };
+                        document.write('<scr' + 'ipt type="text/javascript" src="//www.highperformanceformat.com/094487b0e8eb6155b637ff13dbbb9990/invoke.js"></scr' + 'ipt>');
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="grid-canvas"></canvas>
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Score Display -->
+        <div id="score-display">
+            <div class="score-card">
+                <div class="score-label">SCORE</div>
+                <div class="score-value" id="score">0</div>
+            </div>
+            <div class="score-card justin-card">
+                <div class="score-label">JUSTIN</div>
+                <div class="score-value" id="justin-count">0</div>
+            </div>
+            <div class="score-card">
+                <div class="score-label">BEST</div>
+                <div class="score-value" id="high-score">0</div>
+            </div>
+        </div>
+
+        <!-- Elite Overlay -->
+        <div id="elite-overlay" class="hidden">
+            <div class="elite-bg-effects">
+                <div class="rotating-square"></div>
+                <div class="rotating-square square-2"></div>
+                <div class="rotating-square square-3"></div>
+                <div class="pulse-circle"></div>
+                <div class="pulse-circle circle-2"></div>
+                <div class="pulse-circle circle-3"></div>
+            </div>
+            
+            <div class="elite-fireflies">
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+                <div class="elite-firefly"></div>
+            </div>
+
+            <div class="elite-content">
+                <div class="elite-glitch-container">
+                    <h2 class="elite-title mega-glitch" data-text="BRAINROT UNLOCKED">BRAINROT UNLOCKED</h2>
+                </div>
+                <p class="elite-text flash-text">LEGENDARY JUSTIN CAUGHT</p>
+                <div class="elite-bonus-container">
+                    <p class="elite-bonus rainbow-text">+1000</p>
+                </div>
+                
+                <div class="elite-user-info">
+                    <p id="elite-username"></p>
+                    <p id="elite-location"></p>
+                </div>
+                
+                <div class="elite-particles"></div>
+                <button id="continue-btn" class="elite-continue-btn">CONTINUE LESGOOO</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="hidden">
+            <div class="gameover-content">
+                <h2 class="gameover-title">ARRESTED</h2>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-label">Final Score</span>
+                        <span class="stat-value" id="final-score">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Justin Catches</span>
+                        <span class="stat-value justin-stat" id="final-justin-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">High Score</span>
+                        <span class="stat-value high-stat" id="final-high-score">0</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="restart-btn" class="funky-btn">PLAY AGAIN</button>
+                    <a href="leaderboard.html" class="funky-btn secondary">LEADERBOARD</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="background-music" loop>
+        <source src="assets/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="collect-sound">
+        <source src="assets/collect.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="caught-sound">
+        <source src="assets/caught.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="justin-sound">
+        <source src="assets/justin.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/game.js"></script>
+
+    <!-- Adsterra Script (before closing body) -->
+    <script type="text/javascript" src="//pl26861519.effectivegatecpm.com/65/21/22/652122822dd1a083bdc92be17442283b.js"></script>
+    <script
+  type="text/javascript"
+  src="//pl26861519.effectivegatecpm.com/65/21/22/652122822dd1a083bdc92be17442283b.js"
+></script>
+
+</body>
+</html>
