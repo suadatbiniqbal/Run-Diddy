@@ -905,3 +905,7 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+#game-over-screen {
+    background: url('../assets/dd.jpeg') no-repeat center center;
+    background-size: cover;
+}

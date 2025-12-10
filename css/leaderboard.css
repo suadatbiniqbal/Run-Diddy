@@ -683,3 +683,9 @@ body {
 .hidden {
     display: none !important;
 }
+.leaderboard-top-img {
+    width: 150px;      /* adjust size */
+    display: block;
+    margin: 20px auto; /* center */
+    opacity: 0.9;      /* optional */
+}
